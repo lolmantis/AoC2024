@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Day2 {
   public static void main(String[] args) throws FileNotFoundException {
-    Scanner in = new Scanner(new File("./src/Day2.txt"));
+    Scanner in = new Scanner(new File("./testfiles/Day2.txt"));
     int safe = 0;
     while (in.hasNextLine()) {
       Integer[] intValues = Arrays.stream(in.nextLine().split(" "))

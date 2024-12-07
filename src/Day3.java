@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class Day3 {
   public static void main(String[] args) throws FileNotFoundException {
-    Scanner in = new Scanner(new File("./src/Day3.txt"));
+    Scanner in = new Scanner(new File("./testfiles/Day3.txt"));
     Pattern pattern = Pattern.compile("mul\\([0-9]{1,3},[0-9]{1,3}\\)|do\\(\\)|don't\\(\\)");
     Integer tally = 0;
     boolean enabled = true;

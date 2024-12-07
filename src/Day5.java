@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Day5 {
-  private static final String path = "./src/Day5.txt";
+  private static final String path = "./testfiles/Day5.txt";
 
   private static final Hashtable<Integer,HashSet<Integer>> rules;
   static {

@@ -7,7 +7,7 @@ import java.util.Hashtable;
 
 public class Day1 {
   public static void main(String[] args) throws FileNotFoundException {
-    Scanner in = new Scanner(new File("./src/Day1.txt"));
+    Scanner in = new Scanner(new File("./testfiles/Day1.txt"));
     int TotalDistance = 0;
     int TotalSimilarity = 0;
     ArrayList<Integer> left = new ArrayList<>();

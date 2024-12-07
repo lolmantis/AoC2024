@@ -13,7 +13,7 @@ public class Day4 {
 
   private static char[][] readFile() throws FileNotFoundException {
     char[][] letters = new char[140][140];
-    Scanner in = new Scanner(new File("./src/Day4.txt"));
+    Scanner in = new Scanner(new File("./testfiles/Day4.txt"));
     int currentLine = 0;
     while (in.hasNextLine()) {
       letters[currentLine++] = in.nextLine().toCharArray();
