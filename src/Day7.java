@@ -9,7 +9,7 @@ public class Day7 {
   private static final String path = test||test2 ?
     "./testfiles/Day7test.txt" : "./testfiles/Day7.txt";
   private static final Integer fileLength = test||test2 ? 9 : 850;
-  private static final Integer testvalue = 3749;
+  private static final Integer bvtestvalue = 3749;
   private static final Integer testvalue2 = 11387;
 
   private static final ArrayList<Long>[] values;
