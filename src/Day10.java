@@ -1,40 +1,17 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 
-public class Day10 {
-  private static final boolean PartTwo = true;
-  private static final boolean Test1 = false;
-  private static final boolean Test2 = false;
-  private static final int testValue1 = 36;
-  private static final int testValue2 = 81;
+public class Day10 extends commons{
 
-  private static final String Path = Test1||Test2 ?
-    "./testfiles/Day10Test.txt" : "./testfiles/Day10.txt";
+  Day10() {super("Day10",36,81);}
 
-  private static final int GridSize = Test1||Test2 ? 8 : 47;
+  private static final int MAX_PATH_LENGTH = 9;
+  private int gridSize;
+  private Integer[][] grid = null;
 
-  private static final Integer[][] grid;
-
-  static {
-    try {
-      grid = ReadFile();
-    }
-    catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private static boolean safeGridComparison(int X, int Y, int Var) {
-    if (X >= GridSize || X < 0 || Y >= GridSize || Y < 0 || Var > 9) {
-      return false;
-    }
-    return grid[Y][X] == Var;
-  }
-
-  private static Integer[][] ReadFile() throws FileNotFoundException {
-    Integer[][] grid = new Integer[GridSize][GridSize];
-    Scanner scanner = new Scanner(new File(Path));
+  @Override
+  protected Integer[][] readFile() {
+    Integer[][] grid = new Integer[gridSize][gridSize];
+    Scanner scanner = getInput();
     int currentStep = 0;
     while (scanner.hasNextLine()) {
       grid[currentStep++] = Arrays.stream(scanner.nextLine().split(""))
@@ -43,53 +20,66 @@ public class Day10 {
     return grid;
   }
 
-  private static void WalkTrail(
-    int gridX, int gridY,
-    int step, HashSet<Pair> found, List<Pair> partTwo) {
-
-    if (safeGridComparison(gridX, gridY, 9)
-      && !found.contains(new Pair(gridX, gridY)) && !PartTwo
-    ) {
-      System.out.println("Pt1: Found a new path! Coords: ("+gridX+", "+gridY+")");
-      found.add(new Pair(gridX, gridY));
+  private boolean safeGridComparison(int X, int Y, int Var) {
+    if (X >= gridSize || X < 0 || Y >= gridSize || Y < 0 || Var > MAX_PATH_LENGTH) {
+      return false;
     }
-    else if (safeGridComparison(gridX, gridY, 9)
-    && PartTwo) {
-      System.out.println("Pt2: Found a new path! Coords: ("+gridX+", "+gridY+")");
-      partTwo.add(new Pair(gridX, gridY));
+    return grid[Y][X] == Var;
+  }
+
+  private void WalkTrail(
+    int gridX, int gridY,
+    int step, HashSet<Pair> found, List<Pair> paths) {
+
+    if (safeGridComparison(gridX, gridY, MAX_PATH_LENGTH)
+      && !found.contains(new Pair(gridX, gridY)) && !partTwo
+    ) {
+      found.add(new Pair(gridX, gridY));
+      if (verbose) {
+        System.out.printf("Pt.1: Found a new path! Coords: (%d, %d)\n", gridX, gridY);
+      }
+    }
+    else if (safeGridComparison(gridX, gridY, MAX_PATH_LENGTH)
+      && partTwo) {
+      paths.add(new Pair(gridX, gridY));
+      if (verbose) {
+        System.out.printf("Pt.2: Found a new path! Coords: (%d, %d)\n", gridX, gridY);
+      }
     }
 
     if (safeGridComparison(gridX, gridY+1, step+1) && step < 9) {
-      WalkTrail(gridX, gridY+1, step+1, found, partTwo);
+      WalkTrail(gridX, gridY+1, step+1, found, paths);
     }
     if (safeGridComparison(gridX, gridY-1, step+1) && step < 9) {
-      WalkTrail(gridX, gridY-1, step+1, found, partTwo);
+      WalkTrail(gridX, gridY-1, step+1, found, paths);
     }
     if (safeGridComparison(gridX-1,gridY,step+1) && step < 9) {
-      WalkTrail(gridX-1, gridY, step+1, found, partTwo);
+      WalkTrail(gridX-1, gridY, step+1, found, paths);
     }
     if (safeGridComparison(gridX+1,gridY,step+1) && step < 9) {
-      WalkTrail(gridX+1, gridY, step+1, found, partTwo);
+      WalkTrail(gridX+1, gridY, step+1, found, paths);
     }
   }
 
-  private static int PartOne() {
+  private int walkTrail(boolean partTwo) {
     int FinalTally = 0;
 
-    for (int gridY = 0; gridY < GridSize; gridY++) {
-      for (int gridX = 0; gridX < GridSize; gridX++) {
+    for (int gridY = 0; gridY < gridSize; gridY++) {
+      for (int gridX = 0; gridX < gridSize; gridX++) {
         if (safeGridComparison(gridX, gridY, 0)) {
           HashSet<Pair> found = new HashSet<>();
-          List<Pair> partTwo = new ArrayList<>();
+          List<Pair> paths = new ArrayList<>();
           int localTally;
-          WalkTrail(gridX, gridY, 0, found, partTwo);
-          if (!PartTwo) {
+          WalkTrail(gridX, gridY, 0, found, paths);
+          if (!partTwo) {
             localTally = found.size();
           }
           else {
-            localTally = partTwo.size();
+            localTally = paths.size();
           }
-          System.out.println("("+gridX + ", " + gridY + ") Trails: " + localTally);
+          if (verbose) {
+            System.out.printf("(%d, %d) Trails: %d%n\n", gridX, gridY, localTally);
+          }
           FinalTally += localTally;
         }
       }
@@ -97,10 +87,23 @@ public class Day10 {
     return FinalTally;
   }
 
-  public static void main(String[] args) {
-    int FinalTally = PartOne();
-    System.out.println("Total trails: "+FinalTally);
+  @Override
+  public void Solve(boolean test, boolean partTwo) {
+    Solve(test, partTwo, false);
   }
+
+  @Override
+  public void Solve(boolean test, boolean partTwo, boolean verbose) {
+    super.Solve(test, partTwo, verbose);
+
+    gridSize = test ? 8 : 47;
+    grid = readFile();
+
+    int FinalTally = walkTrail(partTwo);
+    if (test) {checkTest(FinalTally);}
+    System.out.println("Part "+(partTwo ? 2:1)+": Total trails: "+FinalTally);
+  }
+
 
   static class Pair {
     private final Integer X;
@@ -110,7 +113,6 @@ public class Day10 {
       this.X = X;
       this.Y = Y;
     }
-
     public boolean ComparePair(Pair p) {
       return X.equals(p.getX()) && Y.equals(p.getY());
     }
@@ -120,7 +122,6 @@ public class Day10 {
     public Integer getY() {
       return Y;
     }
-
     @Override
     public String toString() {
       return "{%d, %d}".formatted(X, Y);
@@ -128,12 +129,8 @@ public class Day10 {
 
     @Override
     public boolean equals(Object obj) {
-      if (obj == this) {
-        return true;
-      }
-      if (obj == null) {
-        return false;
-      }
+      if (obj == this) {return true;}
+      if (obj == null) {return false;}
 
       if (obj instanceof Pair) {
         return this.ComparePair((Pair) obj);
@@ -142,8 +139,6 @@ public class Day10 {
     }
 
     @Override
-    public int hashCode() {
-      return Objects.hash(X, Y);
-    }
+    public int hashCode() {return Objects.hash(X, Y);}
   }
 }

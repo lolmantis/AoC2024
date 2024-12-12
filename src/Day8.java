@@ -1,28 +1,15 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.regex.Pattern;
 
-public class Day8 {
-  private static final boolean PartTwo = true;
+public class Day8 extends commons {
 
-  private static final boolean Test1 = false;
-  private static final boolean Test2 = false;
-  private static final int testValueOne = 14;
-  private static final int testValueTwo = 34;
-  private static final String path = Test1||Test2 ? "./testfiles/Day8Test.txt" : "./testfiles/Day8.txt";
-  private static final int gridSize = Test1||Test2 ? 12 : 50;
+  Day8() {super("Day8", 14,34);}
 
-  private static final char[][] grid;
-  static {
-    try {
-      grid = readFile();
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-  }
+  private int gridSize;
 
-  private static char[][] readFile() throws FileNotFoundException {
-    Scanner reader = new Scanner(new File(path));
+  @Override
+  protected char[][] readFile() {
+    Scanner reader = getInput();
     char[][] grid = new char[gridSize][gridSize];
     for (int row = 0; row < gridSize; row++) {
       grid[row] = reader.nextLine().toCharArray();
@@ -30,9 +17,9 @@ public class Day8 {
     return grid;
   }
 
-  private static void findAntinodes() {
-
+  private long findAntinodes(char[][] grid) {
     HashMap<Character, ArrayList<Integer[]>> characters = new HashMap<>();
+
     for (int y = 0; y < gridSize; y++) {
       for (int x = 0; x < gridSize; x++) {
         if (grid[y][x] != '.') {
@@ -41,6 +28,7 @@ public class Day8 {
         }
       }
     }
+
     for (char character : characters.keySet()) {
       for (int first = 0; first < characters.get(character).size(); first++) {
         for (int second = 0; second < characters.get(character).size(); second++) {
@@ -68,7 +56,7 @@ public class Day8 {
               grid[antiNodeY][antiNodeX] = '#';
             }
 
-            if (PartTwo) {
+            if (partTwo) {
               grid[Y1][X1] = '#';
               while (
                 antiNodeX+displacementX < gridSize
@@ -85,21 +73,34 @@ public class Day8 {
         }
       }
     }
+    StringBuilder collapsedGrid = new StringBuilder();
+    for (char[] row : grid) {
+      collapsedGrid.append(row);
+    }
+    Pattern match = Pattern.compile("#");
+    return match.matcher(collapsedGrid).results().count();
   }
 
+  @Override
+  public void Solve(boolean test, boolean partTwo) {
+    Solve(test,partTwo, false);
+  }
 
-  public static void main(String[] args) {
+  @Override
+  public void Solve(boolean test, boolean partTwo, boolean verbose) {
+    super.Solve(test, partTwo, verbose);
 
-  findAntinodes();
-    for (char[] row : grid) {
-      System.out.println(row);
-    }
-    int tally = 0;
-    for (char[] row : grid) {
-      for (char c : row) {
-        tally += c=='#' ? 1 : 0;
+    gridSize = test ? 12 : 50;
+    char[][] grid = readFile();
+    long tally = findAntinodes(grid);
+    checkTest(tally);
+
+    if (verbose) {
+      for (char[] row : grid) {
+        System.out.println(row);
       }
     }
-    System.out.println(tally);
+
+    displayResult(tally);
   }
 }
