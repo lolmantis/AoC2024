@@ -1,12 +1,12 @@
 public class runner {
   public static void main(String[] args) {
 
-    Day6 current = new Day6();
+    Day12 current = new Day12();
 
-    current.Solve(true, false, true);
-    current.Solve(true,true);
-    current.Solve(false,false, false);
-    current.Solve(false,true);
+//    current.Solve(true, false, false);
+    current.Solve(true,true, true);
+//    current.Solve(false,false, false);
+//    current.Solve(false,true);
 
   }
 }

@@ -19,10 +19,11 @@ abstract class commons {
   }
 
   protected Scanner getInput() {
-    File file = new File(test ? "./inputs/" + day + "test.txt" : "./inputs/" + day + ".txt");
+    String path = (test ? "./inputs/%stest.txt" : "./inputs/%s.txt").formatted(day);
+    File file = new File(path);
     Scanner scanner = null;
     try {scanner = new Scanner(file);} catch (FileNotFoundException e) {
-      System.out.println("couldn't find file: ./inputs/"+day+".txt");
+      System.out.printf("couldn't find file: %s", path);
       System.exit(10);
     }
     return scanner;
