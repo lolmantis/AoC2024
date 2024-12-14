@@ -34,6 +34,10 @@ abstract class commons {
       System.out.println("Not a test: " + day);
       return;
     }
+    else if (testResult2 == -10000000000000000L) {
+      System.out.println("No available test 2");
+      return;
+    }
     if (
       !((!partTwo && (value == testResult1))
     || (partTwo && (value == testResult2)))
